@@ -1,29 +1,68 @@
+from abc import ABC, abstractmethod
 from typing import AnyStr, Dict
 
 from file_ingestion.models import EnergyData
 
 
-class FileRow:
-    def __init__(
-        self, meter_code, serial_number, plant_code, date_time, data_type, energy, units
-    ):
-        self.meter_code = meter_code
-        self.serial_number = serial_number
-        self.plant_code = plant_code
-        self.date_time = date_time
-        self.date_type = data_type
-        self.energy = energy
-        self.units = units
+class Parser(ABC):
 
-    def __str__(self):
-        return """<FileRow meter_code:<{}> serial_number:<{}>>""".format(
-            self.meter_code, self.serial_number
+    def __init__(self, data: Dict):
+        self.data = data
+
+    @abstractmethod
+    def convert_to_model(self) -> EnergyData:
+        pass
+
+    @property
+    @abstractmethod
+    def meter_code(self) -> AnyStr:
+        pass
+
+    @property
+    @abstractmethod
+    def serial_number(self) -> AnyStr:
+        pass
+
+    @property
+    @abstractmethod
+    def plant_code(self) -> AnyStr:
+        pass
+
+    @property
+    @abstractmethod
+    def date_time(self) -> AnyStr:
+        pass
+
+    @property
+    @abstractmethod
+    def data_type(self) -> AnyStr:
+        pass
+
+    @property
+    @abstractmethod
+    def energy(self) -> AnyStr:
+        pass
+
+    @property
+    @abstractmethod
+    def units(self) -> AnyStr:
+        pass
+
+    def convert_to_model(self) -> EnergyData:
+        return EnergyData(
+            meter_code=self.meter_code,
+            serial_number=self.serial_number,
+            plant_code=self.plant_code,
+            date_time=self.date_time,
+            data_type=self.data_type,
+            energy=self.energy,
+            units=self.units,
         )
 
 
-class LUParser:
+class LUParser(Parser, ABC):
     def __init__(self, data: Dict):
-        self.data = data
+        super().__init__(data)
 
     @property
     def meter_code(self) -> AnyStr:
@@ -57,14 +96,44 @@ class LUParser:
     def status(self) -> AnyStr:
         return self.data["Status"]
 
-    def convert_to_model(self) -> EnergyData:
-        return EnergyData(
-            id=None,
-            meter_code=self.meter_code,
-            serial_number=self.serial_number,
-            plant_code=self.plant_code,
-            date_time=self.date_time,
-            data_type=self.data_type,
-            energy=self.energy,
-            units=self.units,
-        )
+
+class TOUParser(Parser, ABC):
+
+    def __init__(self, data: Dict):
+        super().__init__(data)
+
+    @property
+    def meter_code(self) -> AnyStr:
+        return self.data["MeterCode"]
+
+    @property
+    def serial_number(self) -> AnyStr:
+        return self.data["Serial"]
+
+    @property
+    def plant_code(self) -> AnyStr:
+        return self.data["PlantCode"]
+
+    @property
+    def date_time(self) -> AnyStr:
+        return self.data["DateTime"]
+
+    @property
+    def quantity(self):
+        return self.data["Quality"]
+
+    @property
+    def stream(self):
+        return self.data["Stream"]
+
+    @property
+    def data_type(self) -> AnyStr:
+        return self.data["DataType"]
+
+    @property
+    def energy(self) -> AnyStr:
+        return self.data["Energy"]
+
+    @property
+    def units(self) -> AnyStr:
+        return self.data["Units"]
