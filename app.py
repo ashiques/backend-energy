@@ -1,26 +1,26 @@
 from flask import Flask
 
 from file_ingestion import load_tables
-from file_processing import handle_different_file
+from file_processing import handle_files_load
 
 app = Flask(__name__)
 load_tables()
 
 
 @app.route("/")
-def hello():
+def root():
     return "Hello, World!"
 
 
 @app.route("/load-data")
-def add_user():
-    handle_different_file()
+def load_data():
+    handle_files_load()
     return "Process complete"
 
 
-@app.route("/users")
-def get_users():
-    return "Get all Users"
+@app.route("/get-data")
+def fetch_energy_data():
+    return "Get energy data"
 
 
 if __name__ == "__main__":

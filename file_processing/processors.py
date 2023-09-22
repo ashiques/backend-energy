@@ -1,17 +1,17 @@
 from abc import ABC, abstractmethod
 from typing import AnyStr, Dict
 
+from datetime import datetime
+
 from file_ingestion.models import EnergyData
+
+DATE_FORMAT = "%d/%m/%Y"
 
 
 class Parser(ABC):
 
     def __init__(self, data: Dict):
         self.data = data
-
-    @abstractmethod
-    def convert_to_model(self) -> EnergyData:
-        pass
 
     @property
     @abstractmethod
@@ -48,7 +48,7 @@ class Parser(ABC):
     def units(self) -> AnyStr:
         pass
 
-    def convert_to_model(self) -> EnergyData:
+    def to_model(self) -> EnergyData:
         return EnergyData(
             meter_code=self.meter_code,
             serial_number=self.serial_number,
@@ -77,8 +77,8 @@ class LUParser(Parser, ABC):
         return self.data["Plant Code"]
 
     @property
-    def date_time(self) -> AnyStr:
-        return self.data["Date/Time"]
+    def date_time(self) -> datetime:
+        return datetime.strptime(self.data["Date/Time"][:10], DATE_FORMAT)
 
     @property
     def data_type(self) -> AnyStr:
@@ -115,8 +115,8 @@ class TOUParser(Parser, ABC):
         return self.data["PlantCode"]
 
     @property
-    def date_time(self) -> AnyStr:
-        return self.data["DateTime"]
+    def date_time(self) -> datetime:
+        return datetime.strptime(self.data["DateTime"][:10], DATE_FORMAT)
 
     @property
     def quantity(self):

@@ -1,7 +1,9 @@
 from sqlalchemy.orm import DeclarativeBase
 import sqlalchemy as db
 
-engine = db.create_engine("sqlite:///data/test.db")
+CONNECTION_URL = "postgresql://postgres:example@localhost/postgres"
+SQL_LITE = "sqlite:///data/test.db"
+engine = db.create_engine(CONNECTION_URL)
 
 
 class Base(DeclarativeBase):

@@ -27,22 +27,21 @@ def get_file_path():
 
 def _load_data(reader, file_type: FileType):
     session = Session(engine)
-    data = [LUParser(row).convert_to_model() for row in reader] if file_type == FileType.LU else [
-        TOUParser(row).convert_to_model() for row in reader]
-    print("Count of entities loaded: {}".format(len(data)))
+    data = [LUParser(row).to_model() for row in reader] if file_type == FileType.LU else [
+        TOUParser(row).to_model() for row in reader]
+    print(f"Count of entities loaded: {len(data)}")
     session.add_all(data)
     session.commit()
 
 
-def handle_different_file():
+def handle_files_load():
     for path in get_file_path():
-        print("inside process {}".format(path.name))
+        print(f"Process  file: {path.name}")
         with open(path) as file_name:
             reader = csv.DictReader(file_name)
             if path.name.startswith("LP_"):
-                _load_data(reader, FileType.LU)
                 # handle for LP files
-                pass
+                _load_data(reader, FileType.LU)
             elif path.name.startswith("TOU_"):
                 # handle for TOU files
                 _load_data(reader, FileType.TOU)
