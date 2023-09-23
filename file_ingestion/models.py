@@ -1,9 +1,11 @@
-from datetime import datetime
+from typing import AnyStr
 
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, Session
 from sqlalchemy import Column, Float, String, Integer, DateTime
+from sqlalchemy.sql import func, text
 
-from file_ingestion import Base
+from file_ingestion import Base, engine, Dialects
+from datetime import datetime
 
 
 class EnergyData(Base):
@@ -23,7 +25,8 @@ class EnergyData(Base):
 
 class EnergyMaterialView(Base):
     __tablename__ = "energy_data_mv"
-    # Define columns that match your materialized view's structure
+    # Define columns for the view table
+    id: Mapped[int] = Column(Integer, primary_key=True, autoincrement=True)
     meter_code: Mapped[str] = Column(String(30))
     serial_code: Mapped[str] = Column(String(30))
     plant_code: Mapped[str] = Column(String(30))
@@ -34,3 +37,81 @@ class EnergyMaterialView(Base):
     avg_energy: Mapped[Float] = Column(Float)
 
     date_time: Mapped[DateTime] = Column(DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "meter_code": self.meter_code,
+            "serial_code": self.serial_code,
+            "plant_code": self.plant_code,
+            "max_energy": self.max_energy,
+            "min_energy": self.min_energy,
+            "avg_energy": self.avg_energy,
+            "date_time": self.date_time,
+        }
+
+
+def aggregate_energy_data(dialect: Dialects):
+    session = Session(engine)
+
+    query = session.query(
+        EnergyData.meter_code,
+        EnergyData.serial_number,
+        EnergyData.plant_code,
+        func.max(EnergyData.energy).label("max_energy"),
+        func.min(EnergyData.energy).label("min_energy"),
+        func.avg(EnergyData.energy).label("avg_energy"),
+        EnergyData.date_time,
+    ).group_by(
+        EnergyData.meter_code,
+        EnergyData.serial_number,
+        EnergyData.plant_code,
+        EnergyData.date_time,
+    )
+    # query the results
+    results = query.all()
+    if len(results) != 0:
+        # clean up the table
+        truncate_query = (
+            f"TRUNCATE TABLE {EnergyMaterialView.__tablename__}"
+            if dialect == Dialects.PG
+            else f"DELETE FROM {EnergyMaterialView.__tablename__}"
+        )
+
+        session.execute(text(truncate_query))
+        session.commit()
+
+        # create the models
+        view_objs = [
+            EnergyMaterialView(
+                meter_code=row[0],
+                serial_code=row[1],
+                plant_code=row[2],
+                max_energy=row[3],
+                min_energy=row[4],
+                avg_energy=row[5],
+                date_time=row[6],
+            )
+            for row in query.all()
+        ]
+        # store the models in db
+        session.add_all(view_objs)
+        session.commit()
+
+    session.close()
+
+
+def get_energy_data(
+        meter_code: AnyStr, serial_code: AnyStr, date_time: datetime):
+    session = Session(engine)
+    energy_data = (
+        session.query(EnergyMaterialView)
+        .filter(
+            EnergyMaterialView.meter_code == meter_code,
+            EnergyMaterialView.serial_code == serial_code,
+            EnergyMaterialView.date_time == date_time,
+        )
+        .first()
+    )
+    session.close()
+    return energy_data.to_dict()
