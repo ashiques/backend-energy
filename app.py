@@ -39,15 +39,15 @@ def load_energy_info():
 @app.route("/get-data", methods=["GET"])
 def fetch_energy_data():
     if not request.args.get("date_time") or not is_valid_datetime(
-        request.args.get("date_time")
+            request.args.get("date_time")
     ):
-        abort(404, f"date_time should in {DATE_FORMAT}")
+        abort(400, f"date_time should in {DATE_FORMAT}")
 
     if not request.args.get("meter_code"):
-        abort(404, "meter_code is mandatory")
+        abort(400, "meter_code is mandatory")
 
     if not request.args.get("serial_code"):
-        abort(404, "serial_code is mandatory")
+        abort(400, "serial_code is mandatory")
 
     meter_code: AnyStr = request.args.get("meter_code")
     serial_code: AnyStr = request.args.get(
