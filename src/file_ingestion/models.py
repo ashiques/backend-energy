@@ -24,7 +24,7 @@ class EnergyData(Base):
 
 
 class EnergyMaterialView(Base):
-    __tablename__ = "energy_data_mv"
+    __tablename__ = "energy_data_view"
     # Define columns for the view table
     id: Mapped[int] = Column(Integer, primary_key=True, autoincrement=True)
     meter_code: Mapped[str] = Column(String(30))
