@@ -7,7 +7,7 @@ Below are the following functionalities expected:
 
 * Load the data from files to DB, using the ORM
 * Populate a view table with the aggregated query for *MIN*, *MAX* and *AVG* operations.
-* Exhibit and API end-point to fetch the aggregated data in table.
+* Exhibit and API end-point to fetch the aggregated data from table.
 
 As part of the modelling of the tables and queries following assumptions are made
 
@@ -86,9 +86,49 @@ curl --location 'http://localhost:8080/populate-view'
 
 ### Query the view table with parameters
 
+#### Request format
+
 ```bash
 curl --location 'http://localhost:8080/get-data?meter_code=210095893&date_time=01%2F09%2F2015&serial_code=210095893'
 ```
+
+#### Response format
+
+##### Sample Success
+
+```json
+{
+  "message": "energy data not present"
+}
+```
+
+#### Sample No Data:
+
+```json
+{
+  "avg_energy": 1.7166666666666668,
+  "date_time": "Tue, 01 Sep 2015 00:00:00 GMT",
+  "id": 5,
+  "max_energy": 4.2,
+  "meter_code": "210095893",
+  "min_energy": 0.0,
+  "plant_code": "ED031000001",
+  "serial_code": "210095893"
+}
+```
+
+#### Sample input validations:
+
+```html
+
+<!doctype html>
+<html lang=en>
+<title>400 Bad Request</title>
+<h1>Bad Request</h1>
+<p>date_time should in %d/%m/%Y</p>
+```
+
+---
 
 ## Nuances of the implementation:
 
