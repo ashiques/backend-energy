@@ -4,7 +4,7 @@ from sqlalchemy.orm import Mapped, Session
 from sqlalchemy import Column, Float, String, Integer, DateTime
 from sqlalchemy.sql import func, text
 
-from file_ingestion import Base, engine, Dialects
+from file_ingestion import Base, engine
 from datetime import datetime
 
 
@@ -51,7 +51,7 @@ class EnergyMaterialView(Base):
         }
 
 
-def aggregate_energy_data(dialect: Dialects):
+def aggregate_energy_data():
     session = Session(engine)
 
     query = session.query(
@@ -74,8 +74,6 @@ def aggregate_energy_data(dialect: Dialects):
         # clean up the table
         truncate_query = (
             f"TRUNCATE TABLE {EnergyMaterialView.__tablename__}"
-            if dialect == Dialects.PG
-            else f"DELETE FROM {EnergyMaterialView.__tablename__}"
         )
 
         session.execute(text(truncate_query))
@@ -114,4 +112,4 @@ def get_energy_data(
         .first()
     )
     session.close()
-    return energy_data.to_dict()
+    return energy_data.to_dict() if energy_data else None

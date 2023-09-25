@@ -1,15 +1,8 @@
 from sqlalchemy.orm import DeclarativeBase
 import sqlalchemy as db
-from enum import Enum
+from os import environ
 
-CONNECTION_URL = "postgresql://postgres:example@localhost/postgres"
-CONNECTION_SQLITE = "sqlite:///data/test.db"
-engine = db.create_engine(CONNECTION_SQLITE)
-
-
-class Dialects(Enum):
-    SQLITE = "SQLITE"
-    PG = "PG"
+engine = db.create_engine(environ["DB_URL"])
 
 
 class Base(DeclarativeBase):

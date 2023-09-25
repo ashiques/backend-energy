@@ -9,8 +9,7 @@ from sqlalchemy.orm import Session
 
 from file_ingestion import engine
 from file_ingestion.models import aggregate_energy_data, get_energy_data
-from file_processing.processors import LUParser, Parser, TOUParser
-from file_ingestion import Dialects
+from file_processing.processors import LUParser, TOUParser
 
 from datetime import datetime
 
@@ -55,8 +54,8 @@ def handle_files_load():
                 _load_data(reader, FileType.TOU)
 
 
-def aggregate(dialect: Dialects):
-    aggregate_energy_data(dialect)
+def aggregate():
+    aggregate_energy_data()
 
 
 def get_data(meter_code: AnyStr, serial_code: AnyStr, date_time: datetime):

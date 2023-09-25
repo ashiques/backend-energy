@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+
+  backend-app:
+    build:
+      context: ../  # Path to the directory containing the Dockerfile
+      dockerfile: Dockerfile  # Optional: Specify the Dockerfile name (default is "Dockerfile")
+    ports:
+      - "8080:5000"
+    volumes:
+      - ../datafiles:/app/datafiles
+    depends_on:
+      - db
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-volume:/var/lib/postgresql/data
+volumes:
+  db-volume:

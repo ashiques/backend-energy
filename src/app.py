@@ -1,13 +1,13 @@
 from datetime import datetime
-
 from flask import Flask, jsonify, request, abort
 from typing import AnyStr
 
-from file_ingestion import load_tables, Dialects
+from file_ingestion import load_tables
 from file_processing import handle_files_load, aggregate, get_data
 from file_processing.processors import DATE_FORMAT
 
 app = Flask(__name__)
+# reload on application re-load
 load_tables()
 
 
@@ -21,18 +21,20 @@ def is_valid_datetime(string):
 
 @app.route("/")
 def root():
-    return "Root Loaded"
+    return "Root Loaded \n"
 
 
 @app.route("/load-data", methods=["GET"])
 def load_data():
+    # re-load tables to maintain the view
+    load_tables()
     handle_files_load()
     return jsonify({"message": "Load data complete"})
 
 
 @app.route("/populate-view", methods=["GET"])
 def load_energy_info():
-    aggregate(dialect=Dialects.SQLITE)
+    aggregate()
     return jsonify({"message": "Load data in view complete"})
 
 
