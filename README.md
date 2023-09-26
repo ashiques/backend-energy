@@ -65,6 +65,58 @@ GROUP BY METER_CODE,
 
 ---
 
+## Testing
+
+**_NOTE: For the functional Test to run make sure the local postgres is running from docker-compose file_**
+
+### DBConfig
+
+```DB_URL: postgresql://postgres:example@local/postgres```
+
+### General Test run
+
+```bash 
+pytest
+```
+
+### Coverage scripts
+
+```bash
+# run the test
+coverage run -m pytest
+
+# create the html pages
+coverage html && open htmlcov/index.html
+```
+
+### Converage Run
+
+![img_2.png](imgs/img_2.png)
+
+---
+
+## Docker Usage:
+
+A dockerfile has been created at the root path of the project to build this project as a python project.
+
+### Docker compose
+
+To start the app and postgres with the build in detached mode from the root dir
+
+```bash
+docker-compose -f src/docker/docker-compose.yml up -d
+```
+
+### Postman collection
+
+Postman collection for the app is present in the below folder:
+
+```
+collection/Energy Data load Collection.postman_collection.json
+```
+
+---
+
 ## APIs and Usage
 
 The expectation is the endpoints needs to be called in order,
@@ -136,6 +188,7 @@ curl --location 'http://localhost:8080/get-data?meter_code=210095893&date_time=0
 
 * If connection information are changed it needs to be changes in the Dockerfile and docker-compose.yml.
 * Have not implemented the change from wsgi to gunicorn for production server implementation.
+
 
 
 

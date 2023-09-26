@@ -1,8 +1,10 @@
+"""Test file processor data"""
 from src.file_processing.processors import LUParser, TOUParser
 from datetime import datetime
 
 
 def test_lu_parser():
+    """Test LUParser is working and creating the EnergyData object"""
     data = {
         "MeterPoint Code": "210095893",
         "Serial Number": "210095893",
@@ -30,6 +32,7 @@ def test_lu_parser():
 
 
 def test_tou_parser():
+    """Test TOUParser is working and creating the EnergyData object"""
     data = {
         "MeterCode": "212621147",
         "Serial": "212621147",

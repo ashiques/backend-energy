@@ -1,4 +1,7 @@
-from typing import AnyStr, Optional
+"""
+All the models and database processing expected to be done as part of the build
+"""
+from typing import AnyStr, Optional, Dict
 
 from sqlalchemy.orm import Mapped, Session
 from sqlalchemy import Column, Float, String, Integer, DateTime
@@ -9,6 +12,10 @@ from datetime import datetime
 
 
 class EnergyData(Base):
+    """
+    Table to store the information of Energy Data from file
+    """
+
     __tablename__ = "energy_data"
     id: Mapped[int] = Column(Integer, primary_key=True, autoincrement=True)
     meter_code: Mapped[str] = Column(String(30))
@@ -24,6 +31,10 @@ class EnergyData(Base):
 
 
 class EnergyMaterialView(Base):
+    """
+    View table to load the data from the aggregation activity
+    """
+
     __tablename__ = "energy_data_view"
     # Define columns for the view table
     id: Mapped[int] = Column(Integer, primary_key=True, autoincrement=True)
@@ -54,7 +65,13 @@ class EnergyMaterialView(Base):
         return f"<EnergyMaterialView(id={self.id!r}, meter_code={self.meter_code!r}, serial_code={self.serial_code!r})>"
 
 
-def aggregate_energy_data():
+def aggregate_energy_data() -> None:
+    """
+    Aggregation processing function to read data from energy data table
+    and run aggregate query to be stored in the view table.
+
+    :return: None
+    """
     session = Session(engine)
 
     query = session.query(
@@ -100,7 +117,18 @@ def aggregate_energy_data():
     session.close()
 
 
-def get_energy_data(meter_code: AnyStr, serial_code: AnyStr, date_time: datetime):
+def get_energy_data(
+    meter_code: AnyStr, serial_code: AnyStr, date_time: datetime
+) -> Optional[Dict]:
+    """
+    Get the data stored in view table for get-data query
+    :param meter_code: meter_code parameter
+    :type : AnyStr
+    :param serial_code: serial_code parameter
+    :type : AnyStr
+    :param date_time: date_time parameter
+    :return: Optional[Dict]
+    """
     session = Session(engine)
     energy_data: Optional[EnergyMaterialView] = (
         session.query(EnergyMaterialView)

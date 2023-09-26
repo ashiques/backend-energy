@@ -1,3 +1,4 @@
+"""Flask main app file"""
 from datetime import datetime
 from flask import Flask, jsonify, request, abort
 from typing import AnyStr
@@ -43,7 +44,7 @@ def fetch_energy_data():
     if not request.args.get("date_time") or not is_valid_datetime(
         request.args.get("date_time")
     ):
-        abort(400, f"date_time should in {DATE_FORMAT}")
+        abort(400, f"date_time should be in {DATE_FORMAT}")
 
     if not request.args.get("meter_code"):
         abort(400, "meter_code is mandatory")

@@ -1,9 +1,10 @@
+"""This module is to handle the file processing"""
 from enum import Enum
 
 from pathlib import Path
 from os import listdir
 import csv
-from typing import AnyStr
+from typing import AnyStr, Optional, Dict
 
 from sqlalchemy.orm import Session
 
@@ -13,15 +14,19 @@ from ..file_processing.processors import LUParser, TOUParser
 
 from datetime import datetime
 
+# path of the datafiles, needs to be changes if required
 file_path = Path(__file__).parents[1].joinpath("datafiles")
 
 
 class FileType(Enum):
+    """Enum for filetypes"""
+
     LU = "LU"
     TOU = "TOU"
 
 
 def get_file_path():
+    """Get all the full file names from a path"""
     return [
         file_path.joinpath(file_name)
         for file_name in listdir(file_path)
@@ -30,6 +35,7 @@ def get_file_path():
 
 
 def _load_data(reader, file_type: FileType):
+    """Process function to load the data from files to DB"""
     session = Session(engine)
     data = (
         [LUParser(row).to_model() for row in reader]
@@ -42,6 +48,10 @@ def _load_data(reader, file_type: FileType):
 
 
 def handle_files_load():
+    """
+    Function to handle file path fetch and read
+    :return: None
+    """
     for path in get_file_path():
         print(f"Process  file: {path.name}")
         with open(path) as file_name:
@@ -55,8 +65,18 @@ def handle_files_load():
 
 
 def aggregate():
+    """Aggregate the energy data by running the aggregation query"""
     aggregate_energy_data()
 
 
-def get_data(meter_code: AnyStr, serial_code: AnyStr, date_time: datetime):
+def get_data(
+    meter_code: AnyStr, serial_code: AnyStr, date_time: datetime
+) -> Optional[Dict]:
+    """
+    Get the energy data matching the parameter from view table.
+    :param meter_code: meter_code parameter
+    :param serial_code: serial parameter
+    :param date_time: date_time parameter
+    :return: Option]
+    """
     return get_energy_data(meter_code, serial_code, date_time)

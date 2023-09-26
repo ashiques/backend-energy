@@ -1,3 +1,4 @@
+"""Test file model data"""
 import datetime
 
 from src.file_ingestion.models import EnergyMaterialView, EnergyData

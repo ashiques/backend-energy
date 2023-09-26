@@ -1,3 +1,4 @@
+"""Module to load parsers for each type of file"""
 from abc import ABC, abstractmethod
 from typing import AnyStr, Dict
 
@@ -9,6 +10,8 @@ DATE_FORMAT = "%d/%m/%Y"
 
 
 class Parser(ABC):
+    """Default abstraction for file parser"""
+
     def __init__(self, data: Dict):
         self.data = data
 
@@ -48,6 +51,10 @@ class Parser(ABC):
         pass
 
     def to_model(self) -> EnergyData:
+        """
+        function to convert the parser object to Energy Data
+        :return: EnergyData
+        """
         return EnergyData(
             meter_code=self.meter_code,
             serial_number=self.serial_number,
@@ -100,6 +107,7 @@ class LUParser(Parser, ABC):
         return self.data["Status"]
 
     def to_dict(self) -> Dict:
+        """Convert the data stored to a dictionary to enable testing"""
         return {
             "meter_code": self.meter_code,
             "serial_number": self.serial_number,
@@ -153,6 +161,7 @@ class TOUParser(Parser, ABC):
         return self.data["Units"]
 
     def to_dict(self) -> Dict:
+        """Convert the data stored to a dictionary to enable testing"""
         return {
             "meter_code": self.meter_code,
             "serial_number": self.serial_number,

@@ -1,0 +1,81 @@
+{
+	"info": {
+		"_postman_id": "bdc7fd1e-1d98-4515-a1f6-975c4b381138",
+		"name": "Energy Data load Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7778344"
+	},
+	"item": [
+		{
+			"name": "/load-data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/load-data",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"load-data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/populate-view",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/populate-view",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"populate-view"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/get-data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/get-data?meter_code=210095893&date_time=01/09/2015&serial_code=210095893",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"get-data"
+					],
+					"query": [
+						{
+							"key": "meter_code",
+							"value": "210095893"
+						},
+						{
+							"key": "date_time",
+							"value": "01/09/2015"
+						},
+						{
+							"key": "serial_code",
+							"value": "210095893"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
