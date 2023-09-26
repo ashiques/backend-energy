@@ -20,6 +20,19 @@ As part of the modelling of the tables and queries following assumptions are mad
 * Expect energy units to be the same, since conversion logic between each is not implemented.
 * date time data provided is expected to be in `%d/%m/%Y` format, so slicing is done from the datatime field in input.
 
+___
+
+## Python pre-requisite
+
+* Python 3.9 or above
+* create a virtual environment, refer https://docs.python.org/3/library/venv.html
+* Root folder is `src`
+* Run the below command in the root folder to install libraries.
+
+```bash 
+pip install --trusted-host pypi.python.org -r src/requirements.txt 
+```
+
 ---
 
 ## Database Modelling
