@@ -41,7 +41,7 @@ def load_energy_info():
 @app.route("/get-data", methods=["GET"])
 def fetch_energy_data():
     if not request.args.get("date_time") or not is_valid_datetime(
-            request.args.get("date_time")
+        request.args.get("date_time")
     ):
         abort(400, f"date_time should in {DATE_FORMAT}")
 

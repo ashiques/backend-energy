@@ -3,10 +3,10 @@ import os
 from src.app import app
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def test_client():
     # Set the Testing configuration prior to creating the Flask application
-    os.environ['CONFIG_TYPE'] = 'config.TestingConfig'
+    os.environ["CONFIG_TYPE"] = "config.TestingConfig"
     flask_app = app
 
     # Create a test client using the Flask application configured for testing

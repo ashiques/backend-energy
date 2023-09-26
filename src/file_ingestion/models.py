@@ -1,4 +1,4 @@
-from typing import AnyStr
+from typing import AnyStr, Optional
 
 from sqlalchemy.orm import Mapped, Session
 from sqlalchemy import Column, Float, String, Integer, DateTime
@@ -20,7 +20,7 @@ class EnergyData(Base):
     units: Mapped[str] = Column(String(30))
 
     def __repr__(self) -> str:
-        return f"EnergyData(id={self.id!r}, name={self.meter_code!r}, fullname={self.serial_number!r})"
+        return f"<EnergyData(id={self.id!r}, meter_code={self.meter_code!r}, serial_number={self.serial_number!r})>"
 
 
 class EnergyMaterialView(Base):
@@ -50,6 +50,9 @@ class EnergyMaterialView(Base):
             "date_time": self.date_time,
         }
 
+    def __repr__(self):
+        return f"<EnergyMaterialView(id={self.id!r}, meter_code={self.meter_code!r}, serial_code={self.serial_code!r})>"
+
 
 def aggregate_energy_data():
     session = Session(engine)
@@ -72,9 +75,7 @@ def aggregate_energy_data():
     results = query.all()
     if len(results) != 0:
         # clean up the table
-        truncate_query = (
-            f"TRUNCATE TABLE {EnergyMaterialView.__tablename__}"
-        )
+        truncate_query = f"TRUNCATE TABLE {EnergyMaterialView.__tablename__}"
 
         session.execute(text(truncate_query))
         session.commit()
@@ -99,10 +100,9 @@ def aggregate_energy_data():
     session.close()
 
 
-def get_energy_data(
-        meter_code: AnyStr, serial_code: AnyStr, date_time: datetime):
+def get_energy_data(meter_code: AnyStr, serial_code: AnyStr, date_time: datetime):
     session = Session(engine)
-    energy_data = (
+    energy_data: Optional[EnergyMaterialView] = (
         session.query(EnergyMaterialView)
         .filter(
             EnergyMaterialView.meter_code == meter_code,

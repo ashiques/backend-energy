@@ -9,7 +9,6 @@ DATE_FORMAT = "%d/%m/%Y"
 
 
 class Parser(ABC):
-
     def __init__(self, data: Dict):
         self.data = data
 
@@ -59,6 +58,10 @@ class Parser(ABC):
             units=self.units,
         )
 
+    @abstractmethod
+    def to_dict(self) -> Dict:
+        pass
+
 
 class LUParser(Parser, ABC):
     def __init__(self, data: Dict):
@@ -96,9 +99,20 @@ class LUParser(Parser, ABC):
     def status(self) -> AnyStr:
         return self.data["Status"]
 
+    def to_dict(self) -> Dict:
+        return {
+            "meter_code": self.meter_code,
+            "serial_number": self.serial_number,
+            "plant_code": self.plant_code,
+            "date_time": self.date_time,
+            "data_type": self.data_type,
+            "energy": self.energy,
+            "units": self.units,
+            "status": self.status,
+        }
+
 
 class TOUParser(Parser, ABC):
-
     def __init__(self, data: Dict):
         super().__init__(data)
 
@@ -137,3 +151,16 @@ class TOUParser(Parser, ABC):
     @property
     def units(self) -> AnyStr:
         return self.data["Units"]
+
+    def to_dict(self) -> Dict:
+        return {
+            "meter_code": self.meter_code,
+            "serial_number": self.serial_number,
+            "plant_code": self.plant_code,
+            "quantity": self.quantity,
+            "stream": self.stream,
+            "date_time": self.date_time,
+            "data_type": self.data_type,
+            "energy": self.energy,
+            "units": self.units,
+        }
