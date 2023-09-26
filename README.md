@@ -20,6 +20,11 @@ As part of the modelling of the tables and queries following assumptions are mad
 * Expect energy units to be the same, since conversion logic between each is not implemented.
 * date time data provided is expected to be in `%d/%m/%Y` format, so slicing is done from the datatime field in input.
 
+---
+
+### High Level Design
+
+![img.png](imgs/img_3.png)
 ___
 
 ## Python pre-requisite
