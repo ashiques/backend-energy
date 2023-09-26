@@ -38,6 +38,10 @@ ___
 pip install --trusted-host pypi.python.org -r src/requirements.txt 
 ```
 
+> **_NOTE:_**
+> To add more files for file load add them to the folder src/datafiles and run the docker compose.
+> Also, run the endpoints created with the details given below for api usage.
+
 ---
 
 ## Database Modelling
@@ -85,7 +89,8 @@ GROUP BY METER_CODE,
 
 ## Testing
 
-**_NOTE: For the functional Test to run make sure the local postgres is running from docker-compose file_**
+> **_NOTE:_**
+> For the functional Test to run make sure the local postgres is running from docker-compose file
 
 ### DBConfig
 
