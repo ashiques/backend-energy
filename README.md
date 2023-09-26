@@ -18,6 +18,7 @@ As part of the modelling of the tables and queries following assumptions are mad
 * There is an order of execution for apis from end-point which needs to be followed to see the data.
 * Expecting the files to be either LP or TOU format
 * Expect energy units to be the same, since conversion logic between each is not implemented.
+* date time data provided is expected to be in `%d/%m/%Y` format, so slicing is done from the datatime field in input.
 
 ---
 
@@ -45,6 +46,7 @@ Table to load all the data parsed from the files.
 ### Energy Data View Table
 
 Table to store the data aggregated from energy_data, included the query to populate the table.
+
 ![img_1.png](imgs/img_1.png)
 
 ```postgresql
@@ -133,6 +135,7 @@ curl --location 'http://localhost:8080/get-data?meter_code=210095893&date_time=0
 ## Nuances of the implementation:
 
 * If connection information are changed it needs to be changes in the Dockerfile and docker-compose.yml.
+* Have not implemented the change from wsgi to gunicorn for production server implementation.
 
 
 

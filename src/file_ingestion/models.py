@@ -4,7 +4,7 @@ from sqlalchemy.orm import Mapped, Session
 from sqlalchemy import Column, Float, String, Integer, DateTime
 from sqlalchemy.sql import func, text
 
-from file_ingestion import Base, engine
+from ..file_ingestion import Base, engine
 from datetime import datetime
 
 

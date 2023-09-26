@@ -2,9 +2,9 @@ from datetime import datetime
 from flask import Flask, jsonify, request, abort
 from typing import AnyStr
 
-from file_ingestion import load_tables
-from file_processing import handle_files_load, aggregate, get_data
-from file_processing.processors import DATE_FORMAT
+from .file_ingestion import load_tables
+from .file_processing import handle_files_load, aggregate, get_data
+from .file_processing.processors import DATE_FORMAT
 
 app = Flask(__name__)
 # reload on application re-load

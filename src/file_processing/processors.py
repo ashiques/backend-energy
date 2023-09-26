@@ -3,7 +3,7 @@ from typing import AnyStr, Dict
 
 from datetime import datetime
 
-from file_ingestion.models import EnergyData
+from ..file_ingestion.models import EnergyData
 
 DATE_FORMAT = "%d/%m/%Y"
 
